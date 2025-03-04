@@ -1,0 +1,29 @@
+.
+├── airport.jpg
+├── bedroom.jpg
+├── bookshop.jpg
+├── bussiness_table.jpg
+├── classroom.jpg
+├── coffee_shop.jpg
+├── dining_room.jpg
+├── gym.jpg
+├── home.jpg
+├── hospital.jpg
+├── kitchen.jpg
+├── lab.jpg
+├── library.jpg
+├── market.jpg
+├── music_class.jpg
+├── night_market.jpg
+├── park.jpg
+├── photography_room.jpg
+├── study_desk.jpg
+├── subway.jpg
+├── supermarket.jpg
+├── swimming_pool.jpg
+├── train_station.jpg
+├── tree.txt
+└── tub.jpg
+- [error opening dir]
+
+0 directories, 25 files
