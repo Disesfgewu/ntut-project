@@ -1,180 +1,76 @@
-# ntut-project
-independent study in drone
+### **基於 OS2D 單樣本影像偵測模型的圖片通道感測之分析與探討並討論通道剪枝影響**
 
-單樣本物件偵測系統開發 基於 os2d
-
-# Paper Reference
-- [1]  A. Osokin, et al., "OS2D: One-Stage One-Shot Object Detection by Matching 
-Anchor Features," arXiv:2003.06800, 2020. [Online]. Available: 
-https://arxiv.org/abs/2003.06800 
-Github: https://github.com/aosokin/os2d
-- [2]  K. He, et al., "Deep Residual Learning for Image Recognition," in Proceedings of 
-the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2016. 
-[Online]. Available: https://arxiv.org/abs/1512.03385
-- [3]  I. Goodfellow, et al., "Generative Adversarial Networks," arXiv:1406.2661, 2014. 
-[Online]. Available: https://arxiv.org/abs/1406.2661
-- [4] Song, Y., et al., "Denoising Diffusion Implicit Models," arXiv:2010.02502.
-- [5]  B. Jacob, et al., "Quantization and Training of Neural Networks for Efficient 
-Integer-Arithmetic-Only Inference," in Proceedings of the IEEE Conference on 
-Computer Vision and Pattern Recognition (CVPR), 2018. [Online]. Available: 
-https://arxiv.org/abs/1712.05877
-- [6]  NVIDIA Developer, "Optimizing AI Inference with TensorRT," NVIDIA, 2023. 
-[Online]. Available: https://developer.nvidia.com/tensorrt
-- [7]  NVIDIA, "NVIDIA Jetson Orin Nano Super Developer Kit," [Online]. Available: 
-https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/jetson-orin/
- nano-super-developer-kit/
-- [8] H. Li, et al., "Pruning Filters for Efficient ConvNets," in Proceedings of the 
-International Conference on Learning Representations (ICLR), 2017. [Online]. 
-Available: https://arxiv.org/abs/1608.08710
-- [9] M. Fordellone and M. Vichi, "Structural Equation Modeling and simultaneous 
-clustering through the Partial Least Squares algorithm," Preprint submitted to Elsevier,2018. [Online]. Available: https://arxiv.org/abs/1810.07677
-
-
-# Timeline for 18 weeks
-
-## **第一階段（第 1 ~ 6 週）：OS2D 物件偵測系統開發**
-**🔹 目標：**
-- 建立 OS2D 環境，掌握 **單樣本物件偵測** 的核心概念。
-- 透過 **旋轉數據增強（Rotation Augmentation）** 來微調模型，提高其泛化能力。
-
-### **📅 第 1 週：環境建置與 OS2D 安裝**
-✅ **目標**：
-- 在 **Google Colab 或本機（Ubuntu + PyTorch）** 安裝 **OS2D**，建立開發環境。
-- 測試 **官方 Demo**，確保預訓練模型可運行。
-
-✅ **工作內容**：
-1. 安裝 **PyTorch、OS2D 依賴套件**，確保環境相容。
-2. 下載 **OS2D 官方模型與測試影像**。
-3. 測試官方 `demo.py`，檢查是否能成功偵測範例影像。
-
-✅ **驗證方式**：
-- **成功載入 OS2D 模型**（檢查 `model.pth`）。
-- **輸出 OS2D 物件偵測結果**（bounding box + 類別）。
+---
+## **📌 研究目標**
+本研究主要針對 **OS2D（One-Shot Object Detection）模型的圖片通道感測進行分析**，並探討 **通道剪枝（Channel Pruning）對偵測精準度與效能的影響**。主要目標如下：
+1. **解析 OS2D Backbone（ResNet-50）對輸入影像的通道響應行為**。
+2. **利用統計分析（如 T 檢定）量化通道影響力**，篩選關鍵通道。
+3. **利用生成式 AI 產生合成影像，驗證不同影像對通道的影響**。
+4. **進行通道剪枝，測試不同剪枝策略對 OS2D 物件偵測的影響**。
+5. **分析剪枝後的效能（準確率 IoU、推論速度 FPS、模型大小）**，並驗證量化（Quantization）對模型影響。
 
 ---
 
-### **📅 第 2 週：理解 OS2D 模型架構**
-✅ **目標**：
-- 深入理解 **OS2D Backbone（ResNet-50）** 如何提取影像特徵。
-- 研究 **錨點特徵匹配（Anchor Feature Matching）**。
-
-✅ **工作內容**：
-1. 分析 **OS2D 物件偵測流程**（`os2d.py`）。
-2. 研究 **OS2D 如何提取特徵圖（Feature Maps）**：
-   - 使用 **Grad-CAM** 視覺化關鍵特徵。
-   - **輸出 256 個通道的特徵圖**，找出最關鍵的通道。
-
-✅ **驗證方式**：
-- **成功輸出 256 通道的特徵圖**（PNG + `.npy`）。
-- **比較不同輸入影像的 Grad-CAM 熱圖**。
-
----
-
-### **📅 第 3 週：單樣本物件偵測測試**
-✅ **目標**：
-- 使用 **自訂影像** 測試 OS2D 的物件偵測效果。
-- 設計 **旋轉、光照變化** 測試場景。
-
-✅ **工作內容**：
-1. **準備 5~10 張自訂影像**，並輸入 OS2D 測試。
-2. 設計不同條件：
-   - **旋轉 ±30°、±45°**
-   - **改變亮度與對比度**
-3. 記錄 OS2D 在這些條件下的偵測成功率（IoU）。
-
-✅ **驗證方式**：
-- **比較不同測試條件下的 IoU（交集並比）**。
-- **輸出錯誤案例分析（False Positives / Negatives）**。
+## **📆 18 週進度表**
+| 週數 | 研究階段 | 研究內容 |
+|------|----------|---------|
+| **第 1 週** | 環境建置 | 架設 **OS2D + PyTorch** 環境，確保官方 Demo 可運行。 |
+| **第 2 週** | 通道感測基礎 | 撰寫通道分析程式，解析 **ResNet-50 Backbone 通道響應**，並使用 **T 檢定篩選影響通道**。 |
+| **第 3 週** | 生成式 AI 輔助分析 | 使用 **GAN / Diffusion Models 生成影像**，測試不同影像特徵對 OS2D 通道的影響。 |
+| **第 4 週** | 影像變異測試 | 測試 **不同光照、旋轉 ±30°、±45°、遮擋變化**，記錄通道響應。 |
+| **第 5 週** | 通道數據分析 | 計算 **通道貢獻度（Activation Strength）**，視覺化影響通道。 |
+| **第 6 週** | 數據驗證 | 統計不同影像對通道的變化趨勢，並確認哪些通道最重要。 |
+| **第 7 週** | 剪枝策略設計 | 根據 **通道影響力**，設計 **剪枝策略（剪 10%、30%、50%）**。 |
+| **第 8 週** | 剪枝後性能測試 | 剪枝後測試 **IoU、mAP、Grad-CAM 熱圖變化**，視覺化影響分析。 |
+| **第 9 週** | 影像匹配變化 | 測試剪枝後模型 **是否仍能有效匹配樣本影像**，觀察變化。 |
+| **第 10 週** | 錯誤分析 | 記錄剪枝後的 **False Positives / False Negatives**，分析誤判原因。 |
+| **第 11 週** | 推論速度比較 | 測試剪枝後 **FPS、記憶體使用率**，記錄效能提升。 |
+| **第 12 週** | 剪枝策略最佳化 | 總結 **不同剪枝策略對準確率與效能的影響**，確定最佳剪枝方案。 |
+| **第 13 週** | 剪枝 + 量化 | 測試剪枝後的 **FP16 / INT8 量化**，觀察低精度影響。 |
+| **第 14 週** | 量化後的誤判分析 | 分析剪枝 + 量化後的 **錯誤率、推論穩定性**。 |
+| **第 15 週** | 模型優化 | 設定最終剪枝 + 量化策略，並測試最終模型表現。 |
+| **第 16 週** | 綜合測試 | 比較 **OS2D 原始、剪枝、量化後模型** 的準確率、推論速度與模型大小。 |
+| **第 17 週** | 結果整理 | 統整通道剪枝對 OS2D 效能影響的研究數據，進行可視化。 |
+| **第 18 週** | 撰寫研究報告 | 完成報告，總結 **通道剪枝影響、效能對比、應用價值**。 |
 
 ---
 
-### **📅 第 4 週：微調 OS2D（Fine-Tuning）**
-✅ **目標**：
-- 對 **ResNet-50 Backbone** 進行微調，提升泛化能力。
-- 使用 **旋轉數據增強（Rotation Augmentation）** 訓練新模型。
+## **📑 研究支撐論文**
+本研究進度的設計，主要基於以下文獻支持：
 
-✅ **工作內容**：
-1. **設定 OS2D 訓練流程**（使用 `train.py`）。
-2. 設定：
-   - **學習率：0.0001**
-   - **Batch Size：8**
-   - **旋轉增強範圍：±45°**
-3. 訓練 10 個 Epochs，觀察 **mAP 變化**。
+### **🔹 OS2D 相關論文**
+1. **A. Osokin et al.** *(2020)* - **OS2D: One-Stage One-Shot Object Detection by Matching Anchor Features**  
+   - 提供 **OS2D 物件偵測框架**，本研究基於該模型進行通道分析。  
+   - [原始論文](https://arxiv.org/abs/2003.06800)
 
-✅ **驗證方式**：
-- **比較微調前後的 IoU、mAP**。
-- **輸出新模型的偵測結果**（Bounding Box）。
+2. **K. He et al.** *(2016)* - **Deep Residual Learning for Image Recognition**  
+   - OS2D 的 Backbone **ResNet-50** 來源，本研究需理解該架構的特徵提取行為。  
+   - [原始論文](https://arxiv.org/abs/1512.03385)
 
----
+### **🔹 通道剪枝相關論文**
+3. **H. Li et al.** *(2017)* - **Pruning Filters for Efficient ConvNets**  
+   - 提出 **基於 L1 正則化的通道剪枝方法**，本研究可參考其 **篩選低影響通道的方法**。  
+   - [原始論文](https://arxiv.org/abs/1608.08710)
 
-## **第二階段（第 7 ~ 12 週）：生成式 AI 數據增強**
-**🔹 目標：**
-- 使用 **GAN 或 Diffusion Models** 生成 **探測影像（Probe Images）** 來幫助剪枝與量化。
+4. **M. Fordellone et al.** *(2018)* - **Structural Equation Modeling and simultaneous clustering through Partial Least Squares**  
+   - 提供數據分析方法，可用於 **通道感測結果的統計分析（T 檢定）**。  
+   - [原始論文](https://arxiv.org/abs/1810.07677)
 
-### **📅 第 7 週：研究生成式 AI**
-✅ **目標**：
-- 了解 **GAN（StyleGAN、BigGAN）** 與 **Diffusion Models** 生成影像的原理。
-- 測試 **基礎 GAN 影像生成**。
+### **🔹 量化相關論文**
+5. **B. Jacob et al.** *(2018)* - **Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference**  
+   - 討論 **FP16 / INT8 量化對模型推論速度與準確率的影響**，可作為 OS2D 量化參考依據。  
+   - [原始論文](https://arxiv.org/abs/1712.05877)
 
----
-
-### **📅 第 8 週：生成探測影像**
-✅ **目標**：
-- 設計 **合成影像**，用於測試 OS2D 的特徵回應。
-
-✅ **工作內容**：
-1. 生成：
-   - **隨機紋理**
-   - **高頻 / 低頻影像**
-2. 測試這些影像輸入 OS2D 的 **通道響應值**。
-
-✅ **驗證方式**：
-- 找出 **對特定通道影響最強的影像**。
-- **視覺化通道響應變化**。
+6. **NVIDIA Developer** *(2023)* - **Optimizing AI Inference with TensorRT**  
+   - 提供 **TensorRT 量化優化方法**，用於 OS2D 剪枝後的效能提升。  
+   - [原始文件](https://developer.nvidia.com/tensorrt)
 
 ---
 
-## **第三階段（第 13 ~ 18 週）：模型壓縮與優化**
-**🔹 目標：**
-- **剪枝（Pruning）+ 量化（Quantization）** 降低計算成本。
+## **🎯 研究進度設計特色**
+- **第一階段聚焦通道感測**，確保剪枝策略科學合理。
+- **第二階段測試不同剪枝方案**，驗證通道影響力與效能關聯性。
+- **第三階段整合剪枝與量化技術**，提升 OS2D 的效能與運行速度。
+- **所有設計皆有論文支持**，確保研究方法具備學術依據。
 
-### **📅 第 13 週：深入通道剪枝**
-✅ **目標**：
-- **分析 OS2D 的 1024 個特徵通道**，找出 **低活性通道** 並進行剪枝。
-
-✅ **工作內容**：
-1. **計算每個通道的平均活性（Mean Activation）**。
-2. **剪除影響最低的 30% 通道**。
-3. 測試剪枝後的辨識率變化。
-
-✅ **驗證方式**：
-- **比較剪枝前後的 IoU、mAP、FPS**。
-
----
-
-### **📅 第 14 週：量化感知訓練（QAT）**
-✅ **目標**：
-- **將 OS2D 模型量化至 FP16 / INT8**，降低記憶體需求。
-
-✅ **工作內容**：
-1. **使用 TensorRT** 進行 **FP16 量化**，測試推論速度。
-2. **嘗試 INT8 量化**，並校準數據集。
-
-✅ **驗證方式**：
-- **比較原始模型 vs. 量化模型的 FPS、mAP**。
-
----
-
-### **📅 第 15 ~ 16 週：剪枝 + 量化整合**
-✅ **目標**：
-- **剪枝（50%）+ 量化（FP16 / INT8）**，找到最佳配置。
-
-✅ **驗證方式**：
-- 記錄 **最終模型大小 vs. 準確率 vs. FPS**。
-
----
-
-### **📅 第 17 ~ 18 週：成果驗證與報告**
-✅ **目標**：
-- 完成專題報告，整理 **測試數據 + 影像結果**。
-
+這樣的進度設計 **能完整驗證通道剪枝對 OS2D 的影響**，你覺得還需要調整嗎？ 🚀
